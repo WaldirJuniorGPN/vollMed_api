@@ -8,6 +8,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity(name = "Medico")
 @Table(name = "medicos")
 @AllArgsConstructor
@@ -26,6 +28,9 @@ public class Medico {
     private Especialidade especialidade;
     @Embedded
     private Endereco endereco;
+    private boolean ativo;
+    @OneToMany(mappedBy = "medico", cascade = CascadeType.ALL)
+    private List<Consulta> consultas;
 
     public Medico(DadosCadastroMedico dados) {
         this.nome = dados.nome();
@@ -34,6 +39,7 @@ public class Medico {
         this.crm = dados.crm();
         this.especialidade = dados.especialidade();
         this.endereco = new Endereco(dados.endereco());
+        this.ativo = true;
     }
 
     public void atualizarMedico(DadosAtualizacaoMedico dados) {
@@ -53,5 +59,9 @@ public class Medico {
             this.especialidade = dados.especialidade();
         }
         this.endereco.atualizarEndereco(dados.endereco());
+    }
+
+    public void desativarMedico() {
+        this.ativo = false;
     }
 }

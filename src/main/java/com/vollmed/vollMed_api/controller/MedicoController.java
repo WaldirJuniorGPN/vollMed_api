@@ -33,7 +33,7 @@ public class MedicoController {
 
     @GetMapping
     public ResponseEntity<Page<DadosListagemMedico>> listar(Pageable paginacao) {
-        var page = this.repository.findAll(paginacao).map(DadosListagemMedico::new);
+        var page = this.repository.findAllByAtivoTrue(paginacao).map(DadosListagemMedico::new);
         return ResponseEntity.ok(page);
     }
 
@@ -47,7 +47,8 @@ public class MedicoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity deletar(@PathVariable Long id) {
-        this.repository.deleteById(id);
+        var medico = this.repository.getReferenceById(id);
+        medico.desativarMedico();
         return ResponseEntity.noContent().build();
     }
 }
