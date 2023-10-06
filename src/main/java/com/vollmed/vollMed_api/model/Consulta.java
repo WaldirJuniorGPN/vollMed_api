@@ -1,5 +1,6 @@
 package com.vollmed.vollMed_api.model;
 
+import com.vollmed.vollMed_api.dto.request.DadosAgendamentoConsulta;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -26,4 +27,10 @@ public class Consulta {
     @ManyToOne
     @JoinColumn(name = "medico_id")
     private Medico medico;
+
+    public Consulta(DadosAgendamentoConsulta dados) {
+        this.dataDaConsulta = dados.dataConsulta();
+        this.paciente = dados.paciente();
+        this.medico = dados.medico();
+    }
 }
