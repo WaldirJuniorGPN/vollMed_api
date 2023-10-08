@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity(name = "Consulta")
 @Table(name = "consultas")
@@ -20,7 +20,7 @@ public class Consulta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDate dataDaConsulta;
+    private LocalDateTime dataDaConsulta;
     @ManyToOne
     @JoinColumn(name = "paciente_id")
     private Paciente paciente;
