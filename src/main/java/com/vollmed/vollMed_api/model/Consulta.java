@@ -27,10 +27,16 @@ public class Consulta {
     @ManyToOne
     @JoinColumn(name = "medico_id")
     private Medico medico;
+    private boolean ativo;
 
     public Consulta(DadosAgendamentoConsulta dados) {
         this.dataDaConsulta = dados.dataConsulta();
         this.paciente = dados.paciente();
         this.medico = dados.medico();
+        this.ativo = true;
+    }
+
+    public void cancelarConsulta() {
+        this.ativo = false;
     }
 }

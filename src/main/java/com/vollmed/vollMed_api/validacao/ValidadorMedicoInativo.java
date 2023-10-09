@@ -7,18 +7,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ValidadormedicoInativo implements Validacoes {
+public class ValidadorMedicoInativo implements Validacoes {
 
     @Autowired
     private MedicoRepository medicoRepository;
 
     @Override
     public void validarConsulta(DadosConsulta dados) {
-        var medicoExiste = this.medicoRepository.existsById(dados.idMedico());
-        var medico = this.medicoRepository.getReferenceById(dados.idMedico());
 
-        if (medicoExiste && !medico.isAtivo()) {
-            throw new ValidacaoException("Não é permitido agendamentos com Médicos Inativos.");
+        if (dados.idMedico() != null) {
+            var medicoExiste = this.medicoRepository.existsById(dados.idMedico());
+            var medico = this.medicoRepository.getReferenceById(dados.idMedico());
+
+            if (medicoExiste && !medico.isAtivo()) {
+                throw new ValidacaoException("Não é permitido agendamentos com Médicos Inativos.");
+            }
         }
+
     }
 }

@@ -18,4 +18,5 @@ public interface ConsultaRepository extends JpaRepository<Consulta, Long> {
             "WHERE c.medico.id = :medicoId " +
             "AND c.dataConsulta = :dataHoraConsulta")
     boolean existConsultaByMedicoAndDataConsulta(@Param("medicoId") Long medicoId, @Param("dataHoraConsulta") LocalDateTime dataHoraConsulta);
+
 }
