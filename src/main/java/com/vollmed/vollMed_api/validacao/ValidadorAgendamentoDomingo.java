@@ -2,9 +2,11 @@ package com.vollmed.vollMed_api.validacao;
 
 import com.vollmed.vollMed_api.dto.request.DadosAgendamentoConsulta;
 import com.vollmed.vollMed_api.exception.ValidacaoException;
+import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
 
+@Component
 public class ValidadorAgendamentoDomingo implements Validacoes {
 
     @Override

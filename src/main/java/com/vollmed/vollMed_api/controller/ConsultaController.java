@@ -11,6 +11,8 @@ import com.vollmed.vollMed_api.repository.ConsultaRepository;
 import com.vollmed.vollMed_api.repository.MedicoRepository;
 import com.vollmed.vollMed_api.repository.PacienteRepository;
 import com.vollmed.vollMed_api.service.ConsultaService;
+import com.vollmed.vollMed_api.validacao.ValidadorMaisDeUmAgendamentoNoDiaPorMedico;
+import com.vollmed.vollMed_api.validacao.ValidadorMaisDeUmAgendamentoPorPaciente;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -25,7 +27,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("consulta")
 public class ConsultaController {
     @Autowired
-    private ConsultaRepository repository;
+    private ConsultaRepository consultaRepository;
     @Autowired
     private ConsultaService consultaService;
     @Autowired
@@ -33,29 +35,39 @@ public class ConsultaController {
     @Autowired
     private MedicoRepository medicoRepository;
     private DadosAgendamentoConsulta dadosAgendamentoConsulta;
+    @Autowired
+    private ValidadorMaisDeUmAgendamentoPorPaciente validadorPaciente;
+    @Autowired
+    private ValidadorMaisDeUmAgendamentoNoDiaPorMedico validadorMedico;
 
     @PostMapping
     @Transactional
     public ResponseEntity agendarConsulta(@Valid @RequestBody DadosConsulta dados, UriComponentsBuilder uriComponentsBuilder) {
         var paciente = buscaPaciente(dados.idPaciente());
         var medico = buscaMedico(dados);
-        this.dadosAgendamentoConsulta = new DadosAgendamentoConsulta(paciente, medico,dados.especialidade(),dados.dataConsulta());
+
+        this.dadosAgendamentoConsulta = new DadosAgendamentoConsulta(paciente, medico, dados.especialidade(), dados.dataConsulta());
+
         var consulta = this.consultaService.realizarAgendamentoConsulta(dadosAgendamentoConsulta);
-        this.repository.save(consulta);
+        this.validadorPaciente.validarConsulta(this.consultaRepository.existConsultaByPacienteAndDataConsulta(dados.idPaciente(), dados.dataConsulta()));
+        this.validadorMedico.validarConsulta(this.consultaRepository.existConsultaByMedicoAndDataConsulta(dados.idMedico(), dados.dataConsulta()));
+
+        this.consultaRepository.save(consulta);
+
         var uri = uriComponentsBuilder.path("/consulta/{id}").buildAndExpand(consulta.getId()).toUri();
         return ResponseEntity.created(uri).body(new DadosDetalhamentoConsulta(consulta));
     }
 
     @GetMapping
     public ResponseEntity<Page<DadosListagemConsulta>> listarConsultas(Pageable paginacao) {
-        var page = this.repository.findAll(paginacao).map(DadosListagemConsulta::new);
+        var page = this.consultaRepository.findAll(paginacao).map(DadosListagemConsulta::new);
         return ResponseEntity.ok(page);
     }
 
     @DeleteMapping()
     @Transactional
     public ResponseEntity cancelarConsulta(@RequestBody @Valid DadosCancelamentoConsulta dados) {
-        var consulta = this.repository.getReferenceById(dados.id());
+        var consulta = this.consultaRepository.getReferenceById(dados.id());
         this.consultaService.realizarCancelamento(consulta, dados.motivoCancelamento());
         return ResponseEntity.noContent().build();
     }
