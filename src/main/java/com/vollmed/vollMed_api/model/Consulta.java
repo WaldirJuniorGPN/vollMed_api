@@ -36,7 +36,7 @@ public class Consulta {
         this.ativo = true;
     }
 
-    public void cancelarConsulta() {
+    public void cancelarConsulta(Consulta consulta) {
         this.ativo = false;
     }
 }

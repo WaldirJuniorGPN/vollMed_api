@@ -1,8 +1,8 @@
 package com.vollmed.vollMed_api.validacao;
 
-import com.vollmed.vollMed_api.dto.request.DadosConsulta;
+import com.vollmed.vollMed_api.dto.request.DadosAgendamentoConsulta;
 
 public interface Validacoes {
 
-    void validarConsulta(DadosConsulta dados);
+    void validarConsulta(DadosAgendamentoConsulta dados);
 }
