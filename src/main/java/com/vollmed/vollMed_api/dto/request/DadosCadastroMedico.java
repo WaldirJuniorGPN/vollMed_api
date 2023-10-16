@@ -1,31 +1,31 @@
 package com.vollmed.vollMed_api.dto.request;
 
 import com.vollmed.vollMed_api.model.Especialidade;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public record DadosCadastroMedico(
-        @NotBlank(message = "O nome é obrigatório")
-        @Pattern(regexp = "^[A-Za-zÀ-ÖØ-öø-ÿ\\s]*$", message = "Nome inválido")
+        @NotBlank(message = "O nome não pode estar em branco.")
         String nome,
 
-        @NotBlank(message = "O email é obrigatório")
-        @Email(message = "Email inválido")
+        @NotBlank(message = "O email não pode estar em branco.")
+        @Email(message = "O email deve ser um endereço de email válido.")
         String email,
 
-        @NotNull(message = "O telefone é obrigatório")
-        @Pattern(regexp = "^\\(?(\\d{2,3})\\)?[-.\\s]?(\\d{4,5})[-.\\s]?(\\d{4})$", message = "Telefone inválido")
+        @NotBlank(message = "O telefone não pode estar em branco.")
+        @Pattern(regexp = "\\(\\d{2}\\)\\s\\d{4,5}-\\d{4}", message = "O telefone deve estar no formato (99) 99999-9999 ou (99) 9999-9999.")
         String telefone,
 
-        @NotNull(message = "O CRM é obrigatório")
-        @Pattern(regexp = "^\\d{2}\\.\\d{2,4}$", message = "CRM inválido")
+        @NotBlank(message = "O CRM não pode estar em branco.")
+        @Pattern(regexp = "^[0-9]{2}[.][0-9]{3}[.][0-9]{2}$", message = "O CRM deve estar no formato 99.999.99.")
         String crm,
 
-        @NotBlank(message = "A especialidade é obrigatória")
+        @NotBlank(message = "A especialidade não pode estar em branco.")
         Especialidade especialidade,
-
+        @Valid
         DadosEndereco endereco
 ) {
 }
+

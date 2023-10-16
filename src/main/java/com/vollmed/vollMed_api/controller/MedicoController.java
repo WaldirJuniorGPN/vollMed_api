@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
-@RequestMapping("medicos")
+@RequestMapping("medico")
 public class MedicoController {
 
     @Autowired
@@ -26,8 +26,8 @@ public class MedicoController {
     @Transactional
     public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroMedico dados, UriComponentsBuilder uriComponentsBuilder) {
         var medico = new Medico(dados);
+        var uri = uriComponentsBuilder.path("medico/{id}").buildAndExpand(medico.getId()).toUri();
         this.repository.save(medico);
-        var uri = uriComponentsBuilder.path("/medicos/{id}").buildAndExpand(medico.getId()).toUri();
         return ResponseEntity.created(uri).body(new DadosDetalhamentoMedico(medico));
     }
 
@@ -46,9 +46,10 @@ public class MedicoController {
     }
 
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity deletar(@PathVariable Long id) {
         var medico = this.repository.getReferenceById(id);
-        medico.desativarMedico();
+        medico.desativar();
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,22 +1,31 @@
 package com.vollmed.vollMed_api.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public record DadosEndereco(
-        @NotBlank(message = "O Logradouro não pode estar em branco")
+        @NotBlank(message = "O logradouro não pode estar em branco.")
         String logradouro,
+
         Integer numero,
+
         String complemento,
-        @NotBlank(message = "O Bairro não pode estar em branco")
+
+        @NotBlank(message = "O bairro não pode estar em branco.")
         String bairro,
-        @NotBlank(message = "A Cidade não pode estar em branco")
+
+        @NotNull
+        @Pattern(regexp = "^[A-Za-z\\s']+$", message = "A cidade deve conter apenas letras, espaços e apóstrofos.")
         String cidade,
-        @NotBlank
-        @Pattern(regexp = "^[A-Z]{2}$", message = "UF deve conter exatamente 2 letras maiúsculas")
+
+        @NotBlank(message = "A UF não pode estar em branco.")
+        @Pattern(regexp = "^[A-Za-z]{2}$", message = "A UF deve conter exatamente 2 letras.")
         String uf,
-        @NotBlank
-        @Pattern(regexp = "^\\d{8}$", message = "CEP deve conter exatamente 8 dígitos")
+
+        @NotBlank(message = "O CEP não pode estar em branco.")
+        @Pattern(regexp = "^\\d{5}-\\d{3}$", message = "O CEP deve estar no formato 99999-999.")
         String cep
 ) {
 }
+

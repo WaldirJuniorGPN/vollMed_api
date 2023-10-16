@@ -3,14 +3,12 @@ package com.vollmed.vollMed_api.model;
 import com.vollmed.vollMed_api.dto.request.DadosAtualizacaoEndereco;
 import com.vollmed.vollMed_api.dto.request.DadosEndereco;
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Embeddable
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
+@Embeddable
 public class Endereco {
     private String logradouro;
     private Integer numero;
@@ -26,7 +24,7 @@ public class Endereco {
         this.complemento = dados.complemento();
         this.bairro = dados.bairro();
         this.cidade = dados.cidade();
-        this.uf = dados.uf();
+        this.uf = dados.uf().toUpperCase();
         this.cep = dados.cep();
     }
 
@@ -47,10 +45,11 @@ public class Endereco {
             this.cidade = dados.cidade();
         }
         if (dados.uf() != null) {
-            this.uf = dados.uf();
+            this.uf = dados.uf().toUpperCase();
         }
         if (dados.cep() != null) {
             this.cep = dados.cep();
         }
+
     }
 }
