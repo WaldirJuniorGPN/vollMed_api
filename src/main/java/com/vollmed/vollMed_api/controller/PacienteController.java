@@ -1,15 +1,18 @@
 package com.vollmed.vollMed_api.controller;
 
+import com.vollmed.vollMed_api.dto.request.DadosAtualizacaoPaciente;
 import com.vollmed.vollMed_api.dto.request.DadosCadastroPaciente;
+import com.vollmed.vollMed_api.dto.response.DadosDetalhamentoPaciente;
+import com.vollmed.vollMed_api.dto.response.DadosListagemPaciente;
+import com.vollmed.vollMed_api.model.Paciente;
 import com.vollmed.vollMed_api.repository.PacienteRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
@@ -21,7 +24,31 @@ public class PacienteController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroPaciente dados, UriComponentsBuilder uri){
-        return null;
+    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroPaciente dados, UriComponentsBuilder uriComponents) {
+        var paciente = new Paciente(dados);
+        var uri = uriComponents.path("/paciente/{id}").buildAndExpand(paciente.getId()).toUri();
+        return ResponseEntity.created(uri).body(new DadosDetalhamentoPaciente(paciente));
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<DadosListagemPaciente>> listar(Pageable paginacao) {
+        var page = this.repository.findAllByAtivoTrue(paginacao).map(DadosListagemPaciente::new);
+        return ResponseEntity.ok(page);
+    }
+
+    @PutMapping
+    @Transactional
+    public ResponseEntity atualizar(@RequestBody @Valid DadosAtualizacaoPaciente dados) {
+        var paciente = this.repository.getReferenceById(dados.id());
+        paciente.atualizarPaciente(dados);
+        return ResponseEntity.ok(new DadosDetalhamentoPaciente(paciente));
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity deletar(@PathVariable Long id){
+        var paciente = this.repository.getReferenceById(id);
+        paciente.desativarPaciente();
+        return ResponseEntity.noContent().build();
     }
 }
