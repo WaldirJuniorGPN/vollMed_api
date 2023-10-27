@@ -7,6 +7,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity(name = "Paciente")
 @Table(name = "pacientes")
 @NoArgsConstructor
@@ -26,6 +28,9 @@ public class Paciente {
     private Endereco endereco;
 
     private boolean ativo;
+
+    @OneToMany(mappedBy = "paciente")
+    private List<Consulta> consultas;
 
     public Paciente(DadosCadastroPaciente dados) {
         this.nome = dados.nome();
