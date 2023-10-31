@@ -29,9 +29,6 @@ public class Paciente {
 
     private boolean ativo;
 
-    @OneToMany(mappedBy = "paciente")
-    private List<Consulta> consultas;
-
     public Paciente(DadosCadastroPaciente dados) {
         this.nome = dados.nome();
         this.email = dados.email();

@@ -36,8 +36,10 @@ public class ConsultaController {
         var paciente = this.pacienteRepository.findByIdAndAtivoTrue(dados.idPaciente()).orElseThrow(() -> new EntityNotFoundException("Paciente não encontrado"));
         var medico = this.medicoRepository.findByIdAndAtivoTrue(dados.idMedico()).orElseThrow(() -> new EntityNotFoundException("Médico não encontrado"));
         var consulta = new Consulta(paciente, medico, dados.dataConsulta());
+        var consultaByPaciente = this.consultaRepository.findByPacienteIdAndDataConsulta(dados.idPaciente(), dados.dataConsulta());
+        var consultaByMedico = this.consultaRepository.findByMedicoIdAndDataConsulta(dados.idMedico(), dados.dataConsulta());
 
-        this.consultaService.validarConsulta(consulta);
+        this.consultaService.validarConsultas(consultaByMedico, consultaByPaciente, consulta);
 
         var uri = uriComponentsBuilder.path("/consulta/{id}").buildAndExpand(consulta.getId()).toUri();
 

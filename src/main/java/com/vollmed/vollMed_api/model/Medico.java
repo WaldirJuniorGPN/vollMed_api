@@ -32,9 +32,6 @@ public class Medico {
     private Endereco endereco;
     private boolean ativo;
 
-    @OneToMany(mappedBy = "medico")
-    private List<Consulta> consultas;
-
     public Medico(DadosCadastroMedico dados) {
         this.nome = dados.nome();
         this.email = dados.email();
